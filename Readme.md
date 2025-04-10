@@ -9,6 +9,18 @@ NutriMind is a project designed to help users track and improve their nutritiona
 - Generate personalized diet recommendations.
 - Visualize progress with charts and reports.
 
+## Screenshots
+
+### User Interface
+![UI Screenshot](./assets/ui.png)
+
+### Generated Meal Plan Output
+![Output Screenshot](./assets/output.png)
+
+## Meal Plan Output
+
+You can view the detailed meal plan [here](./assets/meal_plan.md).
+
 ## Installation
 
 1. Clone the repository:
