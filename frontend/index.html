@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriMind</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+  <style>
+    :root {
+      --primary: #34c759;
+      --primary-dark: #28a745;
+      --secondary: #6ee7b7;
+      --accent: #f59e0b;
+      --background: #f9fafb;
+      --card-bg: #ffffff;
+      --text: #1a202c;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 10px 30px rgba(0,0,0,0.06);
+      --radius: 20px;
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 80% 20%, rgba(52,199,89,0.1) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: white;
+      font-weight: 700;
+      font-size: 1.8rem; /* Slightly reduced for better fit */
+      letter-spacing: -0.03em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header__logo i {
+      font-size: 2.2rem; /* Adjusted for balance */
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .container {
+      max-width: 1480px;
+      margin: 4rem auto;
+      display: grid;
+      grid-template-columns: 450px 1fr; /* Increased sidebar width slightly */
+      gap: 3rem;
+      padding: 0 4rem;
+    }
+
+    .sidebar {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 3rem;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 8rem;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .sidebar h2 {
+      font-size: 1.8rem; /* Reduced slightly for better spacing */
+      margin-bottom: 2rem;
+      color: var(--primary-dark);
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .pref-section {
+      margin-bottom: 2.5rem; /* Reduced slightly for compactness */
+    }
+
+    .pref-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.75rem; /* Reduced for tighter layout */
+      color: var(--text);
+      font-size: 1.1rem; /* Slightly smaller for readability */
+      letter-spacing: -0.01em;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .pref-btn {
+      flex: 1;
+      padding: 1rem; /* Increased padding for better touch targets */
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: calc(var(--radius) - 6px);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem; /* Increased font size for better readability */
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      white-space: normal; /* Allow text wrapping */
+      text-align: center; /* Center-align text */
+      word-break: break-word; /* Break long words for better fit */
+    }
+
+    .pref-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(52,199,89,0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .pref-btn:hover::after {
+      width: 200%;
+      height: 200%;
+    }
+
+    .pref-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 6px 18px rgba(52,199,89,0.3);
+      transform: translateY(-4px);
+    }
+
+    .pref-btn:hover:not(.active) {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(52,199,89,0.15);
+    }
+
+    .number-control {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      border-radius: var(--radius);
+      padding: 1rem;
+      border: 2px solid var(--border);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .number-control button {
+      width: 3rem;
+      height: 3rem;
+      border: none;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.4rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(52,199,89,0.2);
+    }
+
+    .number-control button:hover {
+      background: var(--primary-dark);
+      transform: scale(1.1);
+      box-shadow: 0 6px 18px rgba(52,199,89,0.3);
+    }
+
+    .number-control input {
+      width: 5rem;
+      padding: 0.75rem;
+      border: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+      background: transparent;
+    }
+
+    .pref-input {
+      width: 100%;
+      padding: 1rem; /* Reduced slightly */
+      border: 2px solid var(--border);
+      border-radius: calc(var(--radius) - 6px);
+      font-size: 1rem; /* Reduced for better fit */
+      font-weight: 500;
+      transition: var(--transition);
+      background: white;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .pref-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 5px rgba(52,199,89,0.15);
+      transform: scale(1.01);
+    }
+
+    .allergies-container {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .allergy-tag {
+      background: var(--primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: calc(var(--radius) - 10px);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem; /* Reduced for better fit */
+      font-weight: 500;
+    }
+
+    .allergy-tag button {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem; /* Slightly smaller */
+      padding: 0;
+      line-height: 1;
+    }
+
+    .allergy-tag button:hover {
+      color: var(--accent);
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 1.5rem; /* Increased padding for better touch targets */
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: calc(var(--radius) - 6px);
+      font-weight: 700;
+      font-size: 1.2rem; /* Increased font size for better readability */
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generate-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .generate-btn:hover::before {
+      width: 300%;
+      height: 300%;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(52,199,89,0.4);
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 3rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .chat-header {
+      margin-bottom: 2rem;
+      color: var(--primary-dark);
+      font-size: 1.8rem; /* Reduced for better fit */
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .chat-box {
+      height: 400px; /* Reduced height */
+      overflow-y: auto;
+      background: var(--background);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .message {
+      padding: 1.5rem;
+      border-radius: calc(var(--radius) - 10px);
+      background: white;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: var(--transition);
+    }
+
+    .message:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 1rem; /* Reduced for better fit */
+    }
+
+    @keyframes fade {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .footer {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      text-align: center;
+      padding: 2rem; /* Reduced slightly */
+      margin-top: 4rem;
+      font-weight: 600;
+      font-size: 1rem; /* Reduced for better fit */
+      box-shadow: var(--shadow);
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+
+    #result {
+      padding: 2rem;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.95);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    #meal-plan {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    #meal-plan h3 {
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #meal-plan ul {
+      list-style-type: disc;
+      margin-left: 2rem;
+      margin-top: 1rem;
+    }
+
+    #meal-plan ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Media query for mobile screens */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr; /* Single column layout */
+        padding: 0 2rem; /* Reduced padding */
+      }
+
+      .sidebar {
+        position: static; /* Remove sticky positioning */
+        margin-bottom: 2rem; /* Add spacing below */
+      }
+
+      .btn-group {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 0.5rem; /* Reduce gap between buttons */
+      }
+
+      .pref-btn {
+        font-size: 1rem; /* Maintain readability on smaller screens */
+        padding: 1rem; /* Adjust padding for better touch targets */
+      }
+
+      .number-control {
+        flex-direction: column; /* Stack controls vertically */
+        align-items: stretch; /* Stretch to full width */
+        gap: 0.5rem; /* Reduce gap for compact layout */
+      }
+
+      .number-control button {
+        width: 100%; /* Full-width buttons */
+        height: auto; /* Adjust height */
+        font-size: 1.2rem; /* Adjust font size */
+        padding: 0.8rem; /* Add padding for better touch targets */
+      }
+
+      .number-control input {
+        width: 100%; /* Full-width input */
+        font-size: 1rem; /* Adjust font size */
+        padding: 0.8rem; /* Add padding for better usability */
+      }
+
+      .generate-btn {
+        font-size: 1rem; /* Adjust font size */
+        padding: 1rem; /* Adjust padding */
+      }
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 480px) {
+      .container {
+        grid-template-columns: 1fr; /* Single column layout */
+        padding: 0 1rem; /* Reduced padding for smaller screens */
+      }
+
+      .sidebar {
+        padding: 2rem; /* Reduced padding for smaller screens */
+      }
+
+      .btn-group {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 0.75rem; /* Adjust gap for smaller screens */
+      }
+
+      .pref-btn {
+        font-size: 1rem; /* Adjust font size for smaller screens */
+        padding: 0.8rem; /* Adjust padding for smaller screens */
+      }
+
+      .number-control {
+        flex-direction: column; /* Stack controls vertically */
+        align-items: stretch; /* Stretch to full width */
+        gap: 0.5rem; /* Reduce gap for compact layout */
+      }
+
+      .number-control button {
+        width: 100%; /* Full-width buttons for smaller screens */
+        height: auto; /* Adjust height */
+        font-size: 1.2rem; /* Adjust font size */
+        padding: 0.8rem; /* Add padding for better touch targets */
+      }
+
+      .number-control input {
+        width: 100%; /* Full-width input for smaller screens */
+        font-size: 1rem; /* Adjust font size */
+        padding: 0.8rem; /* Add padding for better usability */
+      }
+
+      .generate-btn {
+        font-size: 1rem; /* Adjust font size for smaller screens */
+        padding: 1rem; /* Adjust padding for smaller screens */
+      }
+
+      .chat-box {
+        height: 300px; /* Reduced height for smaller screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header__logo">
+      <i class="ri-leaf-line"></i>
+      <span>NutriMind</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Your Preferences</h2>
+      <section class="pref-section">
+        <label>Goal</label>
+        <div class="btn-group" id="goal-group">
+          <button class="pref-btn active" data-goal="weight-loss">Weight Loss</button>
+          <button class="pref-btn" data-goal="muscle-gain">Muscle Gain</button>
+          <button class="pref-btn" data-goal="maintenance">Maintenance</button>
+        </div>
+      </section>
+      <section class="pref-section">
+        <label>Duration</label>
+        <div class="number-control">
+          <button type="button" class="dec">−</button>
+          <input type="number" id="duration-days" min="1" max="7" value="3">
+          <button type="button" class="inc">+</button>
+          <span>days</span>
+        </div>
+      </section>
+      <section class="pref-section">
+        <label>Diet Type</label>
+        <div class="btn-group" id="diet-group">
+          <button class="pref-btn active" data-diet="non-vegetarian">Non-Veg</button>
+          <button class="pref-btn" data-diet="vegetarian">Vegetarian</button>
+          <button class="pref-btn" data-diet="vegan">Vegan</button>
+        </div>
+      </section>
+      <section class="pref-section">
+        <label>Cuisine Style</label>
+        <input type="text" id="cuisine-search" placeholder="Search or select cuisine..." class="pref-input">
+      </section>
+      <section class="pref-section">
+        <label>Allergies</label>
+        <input type="text" id="allergies-input" placeholder="Type and press Enter" class="pref-input">
+        <div class="allergies-container" id="allergies-tags"></div>
+      </section>
+      <button class="generate-btn">Generate Meal Plan</button>
+    </aside>
+
+    <main class="main">
+      <section class="card">
+        <h2 class="chat-header">Status</h2>
+        <div class="chat-box">
+          <div class="message system">
+            Welcome! Adjust your preferences and click "Generate Meal Plan" to start.
+          </div>
+        </div>
+        <div class="loading hidden">
+          <p>"NutriMind – Smart Nutrition, Smarter You!" 🚀🥗</p>
+        </div>
+      </section>
+      <section id="result" class="card hidden">
+        <div id="meal-plan"></div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>© 2023 NutriMind. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const generateBtn = document.querySelector('.generate-btn');
+      const chatMessages = document.querySelector('.chat-box');
+      const resultDiv = document.getElementById('result');
+      const mealPlanText = document.getElementById('meal-plan');
+      const loadingDiv = document.querySelector('.loading');
+      const allergiesInput = document.getElementById('allergies-input');
+      const allergiesTags = document.getElementById('allergies-tags');
+
+      let allergies = [];
+
+      function updateAllergiesUI() {
+        allergiesTags.innerHTML = '';
+        allergies.forEach((allergy, index) => {
+          const tag = document.createElement('div');
+          tag.className = 'allergy-tag';
+          tag.innerHTML = `
+            ${allergy}
+            <button type="button" data-index="${index}">×</button>
+          `;
+          allergiesTags.appendChild(tag);
+        });
+
+        allergiesTags.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const index = parseInt(btn.dataset.index);
+            allergies.splice(index, 1);
+            updateAllergiesUI();
+            console.log('Allergy removed. Current allergies:', allergies);
+          });
+        });
+      }
+
+      allergiesInput.addEventListener('keypress', (e) => {
+        console.log('Key pressed:', e.key);
+        if (e.key === 'Enter' && allergiesInput.value.trim()) {
+          const newAllergy = allergiesInput.value.trim();
+          if (!allergies.includes(newAllergy)) {
+            allergies.push(newAllergy);
+            console.log('Allergy added:', newAllergy);
+            console.log('Current allergies:', allergies);
+          } else {
+            console.log('Duplicate allergy ignored:', newAllergy);
+          }
+          allergiesInput.value = '';
+          updateAllergiesUI();
+        }
+      });
+
+      const goalButtons = document.querySelectorAll('#goal-group .pref-btn');
+      const dietButtons = document.querySelectorAll('#diet-group .pref-btn');
+
+      goalButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          goalButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          console.log('Selected goal:', btn.dataset.goal);
+        });
+      });
+
+      dietButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          dietButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          console.log('Selected diet:', btn.dataset.diet);
+        });
+      });
+
+      const decBtn = document.querySelector('.dec');
+      const incBtn = document.querySelector('.inc');
+      const durationInput = document.getElementById('duration-days');
+
+      decBtn.addEventListener('click', () => {
+        let value = parseInt(durationInput.value);
+        if (value > 1) durationInput.value = value - 1;
+        console.log('Days decreased to:', durationInput.value);
+      });
+
+      incBtn.addEventListener('click', () => {
+        let value = parseInt(durationInput.value);
+        if (value < 7) durationInput.value = value + 1;
+        console.log('Days increased to:', durationInput.value);
+      });
+
+      generateBtn.addEventListener('click', async () => {
+        loadingDiv.classList.remove('hidden');
+        chatMessages.innerHTML = '<div class="message system">Generating your meal plan...</div>';
+
+        const goal = document.querySelector('#goal-group .pref-btn.active').dataset.goal;
+        const days = parseInt(durationInput.value);
+        const diet = document.querySelector('#diet-group .pref-btn.active').dataset.diet;
+        const cuisine = document.getElementById('cuisine-search').value.trim() || 'indian';
+        const calories = document.getElementById('calories-input')?.value.trim() || '2500-3000';
+
+        const payload = {
+          goal: goal,
+          days: days,
+          dietary_preference: diet,
+          cuisine_style: cuisine,
+          allergies: allergies.slice(),
+          calories: calories
+        };
+        console.log('Sending request with:', payload);
+
+        try {
+          const response = await fetch('http://localhost:5000/generate_meal_plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          loadingDiv.classList.add('hidden');
+          if (data.status === 'success') {
+            mealPlanText.innerHTML = data.meal_plan;
+            resultDiv.classList.remove('hidden');
+            chatMessages.innerHTML += '<div class="message system">Meal plan generated successfully!</div>';
+            if (data.file_path) {
+              chatMessages.innerHTML += `<div class="message system">Download your meal plan <a href="${data.file_path}" target="_blank">here</a>.</div>`;
+            }
+            if (data.metadata) {
+              chatMessages.innerHTML += `<div class="message system">Metadata: ${JSON.stringify(data.metadata)}</div>`;
+            }
+          } else {
+            chatMessages.innerHTML += `<div class="message system">Error: ${data.message}</div>`;
+            alert('Error: ' + data.message);
+          }
+        } catch (error) {
+          loadingDiv.classList.add('hidden');
+          chatMessages.innerHTML += '<div class="message system">An error occurred. Please try again.</div>';
+          alert('An error occurred. Please try again.');
+          console.error('Fetch error:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+``` 
